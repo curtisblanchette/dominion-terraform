@@ -85,5 +85,5 @@ output "ecs_tasks" {
 }
 
 output "rds" {
-  value = aws_security_group.rds
+  value = aws_security_group.rds.id
 }

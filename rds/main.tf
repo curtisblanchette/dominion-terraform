@@ -23,6 +23,6 @@ resource "aws_rds_cluster" "main" {
   #  preferred_backup_window   = "07:00-09:00"
   skip_final_snapshot     = true
   vpc_security_group_ids  = [
-    var.db_security_group.id
+    var.db_security_group
   ]
 }
