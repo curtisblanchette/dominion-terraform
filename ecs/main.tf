@@ -68,27 +68,6 @@ resource "aws_iam_policy" "dynamodb" {
 EOF
 }
 
-resource "aws_iam_policy" "secrets" {
-  name        = "${var.name}-task-policy-secrets"
-  description = "Policy that allows access to the secrets we created"
-
-  policy = <<EOF
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Sid": "AccessSecrets",
-            "Effect": "Allow",
-            "Action": [
-              "secretsmanager:GetSecretValue"
-            ],
-            "Resource": ${jsonencode(var.container_secrets_arns)}
-        }
-    ]
-}
-EOF
-}
-
 
 resource "aws_iam_role_policy_attachment" "ecs-task-execution-role-policy-attachment" {
   role       = aws_iam_role.ecs_task_execution_role.name
@@ -98,11 +77,6 @@ resource "aws_iam_role_policy_attachment" "ecs-task-execution-role-policy-attach
 resource "aws_iam_role_policy_attachment" "ecs-task-role-policy-attachment" {
   role       = aws_iam_role.ecs_task_role.name
   policy_arn = aws_iam_policy.dynamodb.arn
-}
-
-resource "aws_iam_role_policy_attachment" "ecs-task-role-policy-attachment-for-secrets" {
-  role       = aws_iam_role.ecs_task_execution_role.name
-  policy_arn = aws_iam_policy.secrets.arn
 }
 
 resource "aws_cloudwatch_log_group" "main" {
@@ -115,7 +89,7 @@ resource "aws_cloudwatch_log_group" "main" {
 }
 
 resource "aws_ecs_task_definition" "main" {
-  family                   = "${var.name}-task-${var.environment}"
+  family                   = "${var.name}-api-task-${var.environment}"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu                      = var.container_cpu
@@ -123,8 +97,8 @@ resource "aws_ecs_task_definition" "main" {
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
   task_role_arn            = aws_iam_role.ecs_task_role.arn
   container_definitions = jsonencode([{
-    name        = "${var.name}-container-${var.environment}"
-    image       = "${var.container_image}:latest"
+    name        = "${var.name}-api-container-${var.environment}"
+    image       = "${data.aws_caller_identity.current.account_id}.dkr.ecr.${data.aws_region.current.name}.amazonaws.com/${var.name}-api"
     essential   = true
     environment = var.container_environment
     portMappings = [{
@@ -140,11 +114,10 @@ resource "aws_ecs_task_definition" "main" {
         awslogs-region        = var.region
       }
     }
-    secrets = var.container_secrets
   }])
 
   tags = {
-    Name        = "${var.name}-task-${var.environment}"
+    Name        = "${var.name}-api-${var.environment}"
     Environment = var.environment
   }
 }
@@ -158,7 +131,7 @@ resource "aws_ecs_cluster" "main" {
 }
 
 resource "aws_ecs_service" "main" {
-  name                               = "${var.name}-service-${var.environment}"
+  name                               = "${var.name}-api-${var.environment}"
   cluster                            = aws_ecs_cluster.main.id
   task_definition                    = aws_ecs_task_definition.main.arn
   desired_count                      = var.service_desired_count
@@ -176,7 +149,7 @@ resource "aws_ecs_service" "main" {
 
   load_balancer {
     target_group_arn = var.aws_alb_target_group_arn
-    container_name   = "${var.name}-container-${var.environment}"
+    container_name   = "${var.name}-api-container-${var.environment}"
     container_port   = var.container_port
   }
 

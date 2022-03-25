@@ -65,6 +65,18 @@ resource "aws_subnet" "public" {
   }
 }
 
+resource "aws_db_subnet_group" "postgresql_subnet_group" {
+  name        = "${var.name}-dbsubnetgroup"
+  subnet_ids = [
+    aws_subnet.private[0].id,
+    aws_subnet.private[1].id
+  ]
+
+  tags = {
+    Name = var.name
+  }
+}
+
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.main.id
 
@@ -174,4 +186,8 @@ output "public_subnets" {
 
 output "private_subnets" {
   value = aws_subnet.private
+}
+
+output "db_subnet_group" {
+  value = aws_db_subnet_group.postgresql_subnet_group
 }

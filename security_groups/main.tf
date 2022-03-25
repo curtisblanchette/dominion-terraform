@@ -58,10 +58,32 @@ resource "aws_security_group" "ecs_tasks" {
   }
 }
 
+##########################################################
+# RDS Aurora - Security Group
+##########################################################
+resource "aws_security_group" "rds" {
+  name        = "${var.name}-api-RDSSecurityGroup"
+  description = "RDS Allowed Ports"
+  vpc_id      = var.vpc_id
+
+  egress {
+    protocol         = "-1"
+    from_port        = 0
+    to_port          = 0
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
+}
+
+
 output "alb" {
   value = aws_security_group.alb.id
 }
 
 output "ecs_tasks" {
   value = aws_security_group.ecs_tasks.id
+}
+
+output "rds" {
+  value = aws_security_group.rds
 }
