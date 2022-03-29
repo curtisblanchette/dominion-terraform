@@ -38,8 +38,8 @@ resource "aws_iam_role" "ecs_task_role" {
 EOF
 }
 
-resource "aws_iam_policy" "dynamodb" {
-  name        = "${var.name}-task-policy-dynamodb"
+resource "aws_iam_policy" "ecs_task_role_policy" {
+  name        = "${var.name}-task-policy"
   description = "Policy that allows access to DynamoDB"
 
   policy = <<EOF
@@ -49,17 +49,47 @@ resource "aws_iam_policy" "dynamodb" {
         {
             "Effect": "Allow",
             "Action": [
-                "dynamodb:CreateTable",
-                "dynamodb:UpdateTimeToLive",
-                "dynamodb:PutItem",
-                "dynamodb:DescribeTable",
-                "dynamodb:ListTables",
-                "dynamodb:DeleteItem",
-                "dynamodb:GetItem",
-                "dynamodb:Scan",
-                "dynamodb:Query",
-                "dynamodb:UpdateItem",
-                "dynamodb:UpdateTable"
+                "apigateway:*",
+                "cognito-idp:*",
+                "cognito-identity:*",
+                "dynamodb:*",
+                "ec2:*",
+                "lambda:*",
+                "logs:DeleteSubscriptionFilter",
+                "logs:DeleteLogStream",
+                "logs:CreateExportTask",
+                "logs:DeleteResourcePolicy",
+                "logs:CreateLogStream",
+                "logs:DeleteMetricFilter",
+                "logs:TagLogGroup",
+                "logs:CancelExportTask",
+                "logs:DeleteRetentionPolicy",
+                "logs:DeleteLogDelivery",
+                "logs:AssociateKmsKey",
+                "logs:PutDestination",
+                "logs:DisassociateKmsKey",
+                "logs:UntagLogGroup",
+                "logs:DeleteLogGroup",
+                "logs:PutDestinationPolicy",
+                "logs:DeleteDestination",
+                "logs:PutLogEvents",
+                "logs:CreateLogGroup",
+                "logs:PutMetricFilter",
+                "logs:CreateLogDelivery",
+                "logs:PutResourcePolicy",
+                "logs:UpdateLogDelivery",
+                "logs:PutSubscriptionFilter",
+                "logs:PutRetentionPolicy",
+                "secretsmanager:DescribeSecret",
+                "secretsmanager:ListSecretVersionIds",
+                "secretsmanager:GetRandomPassword",
+                "secretsmanager:GetSecretValue",
+                "secretsmanager:GetResourcePolicy",
+                "secretsmanager:ListSecrets",
+                "sns:*",
+                "ses:*",
+                "s3:*",
+                "sqs:*"
             ],
             "Resource": "*"
         }
@@ -76,7 +106,7 @@ resource "aws_iam_role_policy_attachment" "ecs-task-execution-role-policy-attach
 
 resource "aws_iam_role_policy_attachment" "ecs-task-role-policy-attachment" {
   role       = aws_iam_role.ecs_task_role.name
-  policy_arn = aws_iam_policy.dynamodb.arn
+  policy_arn = aws_iam_policy.ecs_task_role_policy.arn
 }
 
 resource "aws_cloudwatch_log_group" "main" {

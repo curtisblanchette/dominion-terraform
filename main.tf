@@ -47,14 +47,14 @@ module "security_groups" {
 }
 
 module "rds" {
-  source         = "./rds"
-  name           = var.name
-  vpc_id         = module.vpc.id
-  environment    = var.environment
-  container_port = var.container_port
+  source            = "./rds"
+  name              = var.name
+  vpc_id            = module.vpc.id
+  environment       = var.environment
+  container_port    = var.container_port
   db_security_group = module.security_groups.rds
-  db_subnet_group = module.vpc.db_subnet_group
-  master_password = var.master_password
+  db_subnet_group   = module.vpc.db_subnet_group
+  master_password   = var.master_password
 }
 
 module "alb" {
@@ -103,3 +103,22 @@ module "ecs" {
   #  aws_ecr_repository_url = module.ecr.aws_ecr_repository_url
 }
 
+module "apigw" {
+  source           = "./apigw"
+  name             = var.name
+  environment      = var.environment
+  aws_alb_dns_name = module.alb.aws_alb_dns_name
+}
+
+module "route53" {
+  source                 = "./route53"
+  name                   = var.name
+  environment            = var.environment
+  aws_alb_dns_name       = module.alb.aws_alb_dns_name
+  aws_route53_record_uri = module.route53.aws_route53_record_uri
+  hosted_zone_id         = var.hosted_zone_id
+  aws_alb_zone_id        = module.alb.aws_alb_zone_id
+  deployment_invoke_url  = module.apigw.invoke_url
+}
+
+# TODO Add the ec2 t2.micro instance (used as a bastion host) to access postgres (in the private subnet)

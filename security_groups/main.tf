@@ -62,7 +62,7 @@ resource "aws_security_group" "ecs_tasks" {
 # RDS Aurora - Security Group
 ##########################################################
 resource "aws_security_group" "rds" {
-  name        = "${var.name}-api-RDSSecurityGroup"
+  name        = "${var.name}-sg-rds-${var.environment}"
   description = "RDS Allowed Ports"
   vpc_id      = var.vpc_id
 
@@ -73,8 +73,22 @@ resource "aws_security_group" "rds" {
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]
   }
+
+  tags = {
+    Name        = "${var.name}-sg-rds-${var.environment}"
+    Environment = var.environment
+  }
 }
 
+resource "aws_security_group_rule" "dominion_rds_security_grouo_rule" {
+    type = "ingress"
+    description = "Inbound From ECS"
+    protocol = "TCP"
+    from_port = 5432
+    to_port = 5432
+    security_group_id = aws_security_group.rds.id
+    source_security_group_id = aws_security_group.ecs_tasks.id
+}
 
 output "alb" {
   value = aws_security_group.alb.id
