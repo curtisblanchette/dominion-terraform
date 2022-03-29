@@ -22,7 +22,6 @@ This setup creates the following resources:
   and task definition to run docker containers from the ECR (incl. IAM execution role)
 
 ![example](./image.png "Infrastructure illustration")
-(Source: https://aws.amazon.com/de/blogs/compute/task-networking-in-aws-fargate/)
 
 ### Install Terraform
 
