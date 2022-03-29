@@ -24,13 +24,15 @@ This setup creates the following resources:
 ![example](./image.png "Infrastructure illustration")
 (Source: https://aws.amazon.com/de/blogs/compute/task-networking-in-aws-fargate/)
 
-### Get Started building your own infrastructure
+### Install Terraform
 
 - Install terraform on MacOS with `brew install terraform`
-- create your own `secrets.tfvars` based on `secrets.example.tfvars`, insert the values for your AWS access key and secrets. If you don't create your `secrets.tfvars`, don't worry. Terraform will interactively prompt you for missing variables later on. You can also create your `environment.tfvars` file to manage non-secret values for different environments or projects with the same infrastructure
-- execute `terraform init`, it will initialize your local terraform and connect it to the state store, and it will download all the necessary providers
-- execute `terraform plan -var-file="secret.tfvars" -var-file="environment.tfvars" -out="out.plan"` - this will calculate the changes terraform has to apply and creates a plan. If there are changes, you will see them. Check if any of the changes are expected, especially deletion of infrastructure.
-- if everything looks good, you can execute the changes with `terraform apply out.plan`
+
+### Planning and Applying Changes 
+1. update `dev.tfvars` file to manage secret values for different environments or projects with the same infrastructure
+2. execute `terraform init` to initialize your local terraform environment and connect it to the state store and download necessary providers
+3. execute `terraform plan -var-file="secret.tfvars" -var-file="environment.tfvars" -out="out.plan"` - to calculate changes to apply and create a plan. Check if any of the changes are expected, especially deletion of infrastructure.
+4. if everything looks good, execute your changes with `terraform apply out.plan`
 
 ### Setting up Terraform Backend
 
