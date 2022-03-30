@@ -1,3 +1,7 @@
+variable "account" {
+  description = "the id of the aws account"
+}
+
 variable "name" {
   description = "the name of your stack, e.g. \"demo\""
 }

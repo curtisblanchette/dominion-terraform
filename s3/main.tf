@@ -29,7 +29,7 @@ data "aws_iam_policy_document" "allow_access_from_internet" {
   statement {
     principals {
       type        = "AWS"
-      identifiers = ["229693131931"]
+      identifiers = [var.account]
     }
 
     actions = [
