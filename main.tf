@@ -139,5 +139,11 @@ module "cloudfront" {
   s3_bucket_dns_name = module.s3.s3_bucket_dns_name
 }
 
+module "cognito" {
+  source = "./cognito"
+  name = var.name
+  environment = var.environment
+  user_groups = var.user_groups
+}
 
 # TODO Add the ec2 t2.micro instance (used as a bastion host) to access postgres (in the private subnet)

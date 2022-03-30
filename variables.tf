@@ -94,3 +94,7 @@ variable "certificate_arn" {
 variable "master_password" {
   description = "The postgres instance master password"
 }
+
+variable "user_groups" {
+  description = "the cognito user pool groups"
+}
