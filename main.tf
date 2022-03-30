@@ -64,7 +64,7 @@ module "alb" {
   subnets             = module.vpc.public_subnets
   environment         = var.environment
   alb_security_groups = [module.security_groups.alb]
-  alb_tls_cert_arn    = var.tsl_certificate_arn
+  alb_tls_cert_arn    = var.certificate_arn
   health_check_path   = var.health_check_path
 }
 
@@ -120,5 +120,21 @@ module "route53" {
   aws_alb_zone_id        = module.alb.aws_alb_zone_id
   deployment_invoke_url  = module.apigw.invoke_url
 }
+
+module "s3" {
+  source      = "./s3"
+  name        = var.name
+  environment = var.environment
+  vpc_id      = module.vpc.id
+}
+
+module "cloudfront" {
+  source             = "./cloudfront"
+  name               = var.name
+  environment        = var.environment
+  certificate_arn    = var.certificate_arn
+  s3_bucket_dns_name = module.s3.s3_bucket_dns_name
+}
+
 
 # TODO Add the ec2 t2.micro instance (used as a bastion host) to access postgres (in the private subnet)

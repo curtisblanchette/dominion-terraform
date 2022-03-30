@@ -82,7 +82,7 @@ variable "health_check_path" {
   default     = "/api/v1/healthcheck"
 }
 
-variable "tsl_certificate_arn" {
+variable "certificate_arn" {
   description = "The ARN of the certificate that the ALB uses for https"
   default = "arn:aws:acm:us-east-1:229693131931:certificate/e312a218-750b-41fb-830c-07125a0a2f1f"
 }
