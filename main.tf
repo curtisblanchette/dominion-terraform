@@ -115,10 +115,12 @@ module "route53" {
   name                   = var.name
   environment            = var.environment
   aws_alb_dns_name       = module.alb.aws_alb_dns_name
-  aws_route53_record_uri = module.route53.aws_route53_record_uri
+  route53_alb_record_uri = module.route53.route53_alb_record_uri
+  route53_ui_record_uri  = module.route53.route53_ui_record_uri
   hosted_zone_id         = var.hosted_zone_id
   aws_alb_zone_id        = module.alb.aws_alb_zone_id
   deployment_invoke_url  = module.apigw.invoke_url
+  cloudfront_domain_name = module.cloudfront.cloudfront_domain_name
 }
 
 module "s3" {

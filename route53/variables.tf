@@ -14,8 +14,12 @@ variable "aws_alb_dns_name" {
   description = "then dns name of your alb."
 }
 
-variable "aws_route53_record_uri" {
+variable "route53_alb_record_uri" {
   description = "the cname of the alb"
+}
+
+variable "route53_ui_record_uri" {
+  description = "the cname of the ui"
 }
 
 variable "aws_alb_zone_id" {
@@ -26,3 +30,6 @@ variable "deployment_invoke_url" {
   description = "the api gateway stage invoke url"
 }
 
+variable "cloudfront_domain_name" {
+  description = "the domain name of the cloudfront distribution"
+}

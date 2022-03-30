@@ -68,3 +68,7 @@ resource "aws_cloudfront_distribution" "site" {
 resource "aws_cloudfront_origin_access_identity" "origin_access_identity" {
   comment = "Origin Access Identity for S3"
 }
+
+output "cloudfront_domain_name" {
+  value = aws_cloudfront_distribution.site.domain_name
+}
