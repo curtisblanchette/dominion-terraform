@@ -128,6 +128,7 @@ module "s3" {
   name        = var.name
   environment = var.environment
   vpc_id      = module.vpc.id
+  account     = var.account
 }
 
 module "cloudfront" {
