@@ -4,7 +4,7 @@ variable "account" {
 
 variable "name" {
   description = "the name of your stack, e.g. \"demo\""
-  default = "dominion"
+  default     = "dominion"
 }
 
 variable "environment" {
@@ -33,7 +33,7 @@ variable "aws-secret-key" {
 
 variable "hosted_zone_id" {
   description = "the hosted zone id for dns records"
-  default = "Z1U9E1P8BYPT7O"
+  default     = "Z1U9E1P8BYPT7O"
 }
 
 variable "availability_zones" {
@@ -63,7 +63,7 @@ variable "service_desired_count" {
 
 variable "container_image" {
   description = "The name of the Docker image"
-  default = ""
+  default     = ""
 }
 
 variable "container_port" {
@@ -88,7 +88,7 @@ variable "health_check_path" {
 
 variable "certificate_arn" {
   description = "The ARN of the certificate that the ALB uses for https"
-  default = "arn:aws:acm:us-east-1:229693131931:certificate/e312a218-750b-41fb-830c-07125a0a2f1f"
+  default     = "arn:aws:acm:us-east-1:229693131931:certificate/e312a218-750b-41fb-830c-07125a0a2f1f"
 }
 
 variable "master_password" {
@@ -97,4 +97,5 @@ variable "master_password" {
 
 variable "user_groups" {
   description = "the cognito user pool groups"
+  default     = ["system", "admin", "owner", "consultant", "agent"]
 }

@@ -6,6 +6,12 @@ resource "aws_cognito_user_pool" "main" {
     reply_to_email_address = "contact@4iiz.com"
   }
 
+  username_attributes = ["email"]
+
+  username_configuration {
+    case_sensitive = false
+  }
+
   password_policy {
     minimum_length                   = 12
     temporary_password_validity_days = 30
@@ -14,6 +20,7 @@ resource "aws_cognito_user_pool" "main" {
     require_symbols                  = true
     require_uppercase                = true
   }
+
   schema {
     name                     = "workspaceId"
     attribute_data_type      = "String"
@@ -27,10 +34,22 @@ resource "aws_cognito_user_pool" "main" {
     }
   }
 
+  schema {
+    name                     = "userId"
+    attribute_data_type      = "String"
+    developer_only_attribute = false
+    mutable                  = true
+    required                 = false
+
+    string_attribute_constraints {
+      min_length = 0
+      max_length = 36 # 36 for "UUID"
+    }
+  }
 }
 
 resource "aws_cognito_user_pool_client" "client" {
-  name                = "api"
+  name                = "app"
   user_pool_id        = aws_cognito_user_pool.main.id
   allowed_oauth_flows = [
     "code", "implicit"
@@ -65,7 +84,7 @@ resource "aws_cognito_user_group" "main" {
 
 resource "aws_cognito_user" "cognito_system_user" {
   user_pool_id             = aws_cognito_user_pool.main.id
-  username                 = "4iiz.system"
+  username                 = "4iiz.system@4iiz.com"
   desired_delivery_mediums = ["EMAIL"]
   password                 = "$BeBetter911"
 
