@@ -11,6 +11,7 @@ resource "aws_route53_record" "alb_subdomain" {
 }
 
 resource "aws_route53_record" "gateway_alias" {
+  count = terraform.workspace == "default" ? 1 : 0
   zone_id = var.hosted_zone_id
   name    = "dominion-api.4iiz.io"
   type    = "A"

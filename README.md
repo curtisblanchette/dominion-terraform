@@ -30,8 +30,22 @@ This setup creates the following resources:
 ### Planning and Applying Changes 
 1. update `dev.tfvars` file to manage secret values for different environments or projects with the same infrastructure
 2. execute `terraform init` to initialize your local terraform environment and connect it to the state store and download necessary providers
-3. execute `terraform plan -var-file="secret.tfvars" -var-file="environment.tfvars" -out="out.plan"` - to calculate changes to apply and create a plan. Check if any of the changes are expected, especially deletion of infrastructure.
+3. execute `terraform plan -var-file="dev.tfvars" -out="out.plan"` - to calculate changes to apply and create a plan. Check if any of the changes are expected, especially deletion of infrastructure.
 4. if everything looks good, execute your changes with `terraform apply out.plan`
+
+### Switching Environments(Workspaces)
+A Terraform workspace is a Terraform feature allowing multiple states to be associated with a single configuration.
+
+Whenever a new workspace is created, you are automatically switched to that workspace — this can verified by terraform workspace listwhich prints a list of all available workspaces and selects the current one with an asterisk:
+```
+  default
+* prod
+```
+
+To switch to a different workspace the `select` command can be used: 
+```
+terraform workspace select default[, prod]
+```
 
 ### Setting up Terraform Backend
 

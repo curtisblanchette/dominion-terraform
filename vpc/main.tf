@@ -66,7 +66,7 @@ resource "aws_subnet" "public" {
 }
 
 resource "aws_db_subnet_group" "postgresql_subnet_group" {
-  name       = "${var.name}-dbsubnetgroup"
+  name       = "${var.name}-dbsubnetgroup-${var.environment}"
   subnet_ids = [
     aws_subnet.private[0].id,
     aws_subnet.private[1].id
@@ -81,7 +81,7 @@ resource "aws_route_table" "public" {
   vpc_id = aws_vpc.main.id
 
   tags = {
-    Name        = "${var.name}-routing-table-public"
+    Name        = "${var.name}-routing-table-public-${var.environment}"
     Environment = var.environment
   }
 }
@@ -129,11 +129,11 @@ resource "aws_flow_log" "main" {
 }
 
 resource "aws_cloudwatch_log_group" "main" {
-  name = "${var.name}-cloudwatch-log-group"
+  name = "${var.name}-cloudwatch-log-group-${var.environment}"
 }
 
 resource "aws_iam_role" "vpc-flow-logs-role" {
-  name = "${var.name}-vpc-flow-logs-role"
+  name = "${var.name}-vpc-flow-logs-role-${var.environment}"
 
   assume_role_policy = <<EOF
 {
@@ -153,7 +153,7 @@ EOF
 }
 
 resource "aws_iam_role_policy" "vpc-flow-logs-policy" {
-  name = "${var.name}-vpc-flow-logs-policy"
+  name = "${var.name}-vpc-flow-logs-policy-${var.environment}"
   role = aws_iam_role.vpc-flow-logs-role.id
 
   policy = <<EOF

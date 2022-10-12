@@ -1,4 +1,5 @@
 resource "aws_ecr_repository" "main" {
+  count = terraform.workspace == "default" ? 1 : 0
   name                 = "${var.name}-api"
   image_tag_mutability = "MUTABLE"
 
@@ -8,7 +9,8 @@ resource "aws_ecr_repository" "main" {
 }
 
 resource "aws_ecr_lifecycle_policy" "main" {
-  repository = aws_ecr_repository.main.name
+  count = terraform.workspace == "default" ? 1 : 0
+  repository = aws_ecr_repository.main[count.index].name
 
   policy = jsonencode({
     rules = [{
@@ -27,5 +29,5 @@ resource "aws_ecr_lifecycle_policy" "main" {
 }
 
 output "aws_ecr_repository_url" {
-    value = aws_ecr_repository.main.repository_url
+    value = length(aws_ecr_repository.main) > 0 ? aws_ecr_repository.main[*].repository_url : null
 }

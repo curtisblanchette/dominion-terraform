@@ -91,11 +91,12 @@ variable "certificate_arn" {
   default     = "arn:aws:acm:us-east-1:229693131931:certificate/e312a218-750b-41fb-830c-07125a0a2f1f"
 }
 
-variable "master_password" {
-  description = "The postgres instance master password"
-}
-
 variable "user_groups" {
   description = "the cognito user pool groups"
   default     = ["system", "admin", "owner", "consultant", "agent"]
+}
+
+variable "secrets_manager_arn" {
+  description = "The ARN for the secrets manager secret"
+  default = "arn:aws:secretsmanager:us-east-1:229693131931:secret:dev/secrets-qx3egG"
 }

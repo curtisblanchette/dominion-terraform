@@ -1,5 +1,5 @@
 resource "aws_iam_role" "ecs_task_execution_role" {
-  name = "${var.name}-ecsTaskExecutionRole"
+  name = "${var.name}-ecsTaskExecutionRole-${var.environment}"
 
   assume_role_policy = <<EOF
 {
@@ -19,7 +19,7 @@ EOF
 }
 
 resource "aws_iam_role" "ecs_task_role" {
-  name = "${var.name}-ecsTaskRole"
+  name = "${var.name}-ecsTaskRole-${var.environment}"
 
   assume_role_policy = <<EOF
 {
@@ -39,7 +39,7 @@ EOF
 }
 
 resource "aws_iam_policy" "ecs_task_role_policy" {
-  name        = "${var.name}-task-policy"
+  name        = "${var.name}-task-policy-${var.environment}"
   description = "Policy that allows access to DynamoDB"
 
   policy = <<EOF

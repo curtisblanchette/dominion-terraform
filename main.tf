@@ -4,6 +4,14 @@ provider "aws" {
   region     = var.aws-region
 }
 
+data "aws_secretsmanager_secret" "secrets" {
+  arn = var.secrets_manager_arn
+}
+
+data "aws_secretsmanager_secret_version" "current" {
+  secret_id = data.aws_secretsmanager_secret.secrets.id
+}
+
 #terraform {
 #  backend "s3" {
 #    bucket  = "terraform-backend-store"
@@ -54,7 +62,7 @@ module "rds" {
   container_port    = var.container_port
   db_security_group = module.security_groups.rds
   db_subnet_group   = module.vpc.db_subnet_group
-  master_password   = var.master_password
+  master_password   = jsondecode(data.aws_secretsmanager_secret_version.current.secret_string)["sources.postgres.password"]
 }
 
 module "alb" {
