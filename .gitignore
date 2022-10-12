@@ -2,5 +2,3 @@
 .terraform.tfstate.lock.info
 terraform.tfstate
 terraform.tfstate.backup
-dev.tfvars
-prod.tfvars
