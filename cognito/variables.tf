@@ -9,3 +9,15 @@ variable "environment" {
 variable "user_groups" {
   description = "the cognito user pool groups"
 }
+
+variable "account" {
+  description = "the aws account number"
+}
+
+variable "app_url" {
+  description = "the dominion-ui app URL of this environment"
+}
+
+variable "region" {
+  description = "aws region"
+}

@@ -148,8 +148,11 @@ module "cloudfront" {
 }
 
 module "cognito" {
-  source = "./cognito"
-  name = var.name
+  source      = "./cognito"
+  name        = var.name
+  account     = var.account
+  region      = var.region
+  app_url     = var.app_url
   environment = var.environment
   user_groups = var.user_groups
 }

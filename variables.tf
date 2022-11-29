@@ -17,6 +17,11 @@ variable "region" {
   default     = "us-east-1"
 }
 
+variable "app_url" {
+  description = "the dominion-ui url for this environment"
+  default = "https://app2-dev.4iiz.io"
+}
+
 variable "aws-region" {
   type        = string
   description = "AWS region to launch servers."
