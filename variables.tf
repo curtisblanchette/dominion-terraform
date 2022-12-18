@@ -38,12 +38,11 @@ variable "aws-secret-key" {
 
 variable "hosted_zone_id" {
   description = "the hosted zone id for dns records"
-  default     = "Z1U9E1P8BYPT7O"
 }
 
 variable "availability_zones" {
   description = "a comma-separated list of availability zones, defaults to all AZ of the region, if set to something other than the defaults, both private_subnets and public_subnets have to be defined as well"
-  default     = ["us-east-1a", "us-east-1b"]
+  default     = ["us-west-2a", "us-west-2b"]
 }
 
 variable "cidr" {
