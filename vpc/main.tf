@@ -87,9 +87,11 @@ resource "aws_route_table" "public" {
 }
 
 resource "aws_route" "public_igw" {
+
   route_table_id         = aws_route_table.public.id
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = aws_internet_gateway.main.id
+
 }
 
 resource "aws_route" "public_nat" {
@@ -137,6 +139,7 @@ resource "aws_flow_log" "main" {
 
 resource "aws_cloudwatch_log_group" "main" {
   name = "${var.name}-cloudwatch-log-group-${var.environment}"
+  retention_in_days = "30"
 }
 
 resource "aws_iam_role" "vpc-flow-logs-role" {
@@ -197,4 +200,8 @@ output "private_subnets" {
 
 output "db_subnet_group" {
   value = aws_db_subnet_group.postgresql_subnet_group
+}
+
+output "internet_gateway" {
+  value = aws_internet_gateway.main
 }
