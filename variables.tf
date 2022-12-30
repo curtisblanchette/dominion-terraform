@@ -14,18 +14,12 @@ variable "environment" {
 
 variable "region" {
   description = "the AWS region in which resources are created, you must set the availability_zones variable as well if you define this value to something other than the default"
-  default     = "us-east-1"
+  default     = "us-west-2"
 }
 
 variable "app_url" {
   description = "the dominion-ui url for this environment"
-  default = "https://app2-dev.4iiz.io"
-}
-
-variable "aws-region" {
-  type        = string
-  description = "AWS region to launch servers."
-  default     = "us-east-1"
+  default = "https://app-dev.curtisblanchette.com"
 }
 
 variable "aws-access-key" {
@@ -38,11 +32,12 @@ variable "aws-secret-key" {
 
 variable "hosted_zone_id" {
   description = "the hosted zone id for dns records"
+  default = ""
 }
 
 variable "availability_zones" {
   description = "a comma-separated list of availability zones, defaults to all AZ of the region, if set to something other than the defaults, both private_subnets and public_subnets have to be defined as well"
-  default     = ["us-west-2a", "us-west-2b"]
+  default     = ["us-east-1a", "us-east-1b"]
 }
 
 variable "cidr" {
@@ -72,7 +67,7 @@ variable "container_image" {
 
 variable "container_port" {
   description = "The port where the Docker is exposed"
-  default     = 443
+  default     = 80
 }
 
 variable "container_cpu" {
@@ -92,7 +87,6 @@ variable "health_check_path" {
 
 variable "certificate_arn" {
   description = "The ARN of the certificate that the ALB uses for https"
-  default     = "arn:aws:acm:us-east-1:229693131931:certificate/e312a218-750b-41fb-830c-07125a0a2f1f"
 }
 
 variable "user_groups" {
@@ -102,5 +96,4 @@ variable "user_groups" {
 
 variable "secrets_manager_arn" {
   description = "The ARN for the secrets manager secret"
-  default = "arn:aws:secretsmanager:us-east-1:229693131931:secret:dev/secrets-qx3egG"
 }
