@@ -196,6 +196,7 @@ module "cognito" {
   app_url     = var.app_url
   environment = var.environment
   user_groups = var.user_groups
+  system_password = jsondecode(module.secrets_manager.secret_string)["credentials.system.password"]
 }
 
 module "ec2" {

@@ -21,3 +21,8 @@ variable "app_url" {
 variable "region" {
   description = "aws region"
 }
+
+variable "system_password" {
+  description = "The password of the system user"
+}
+

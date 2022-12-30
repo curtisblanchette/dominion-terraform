@@ -1,17 +1,17 @@
 resource "aws_cognito_user_pool" "main" {
   name                     = "dominion-${var.environment}"
   auto_verified_attributes = ["email"]
-
   mfa_configuration = "OPTIONAL"
   sms_authentication_message = "Your one-time passcode is {####}"
 
   sms_configuration {
     external_id = "cognito_sms"
     sns_caller_arn = aws_iam_role.cognito_sns_role.arn
+    sns_region = var.region
   }
 
   email_configuration {
-    reply_to_email_address = "contact@4iiz.com"
+    reply_to_email_address = "hello@curtisblanchette.com"
   }
 
   username_attributes = ["email"]
@@ -92,14 +92,14 @@ resource "aws_cognito_user_group" "main" {
 
 resource "aws_cognito_user" "cognito_system_user" {
   user_pool_id             = aws_cognito_user_pool.main.id
-  username                 = "4iiz.system@4iiz.com"
+  username                 = "hello@curtisblanchette.com"
   desired_delivery_mediums = ["EMAIL"]
-  password                 = "$BeBetter911"
+  password                 = var.system_password
 
   attributes = {
     phone_number          = "+12507183166"
     phone_number_verified = true
-    email                 = "4iiz.system@4iiz.com"
+    email                 = "hello@curtisblanchette.com"
     email_verified        = true
   }
 }
