@@ -14,9 +14,10 @@ resource "aws_lb" "main" {
 }
 
 resource "aws_alb_target_group" "main" {
-  name        = "${var.name}-tg-${var.environment}"
-  port        = 443
-  protocol    = "HTTPS"
+#  name        = "${var.name}-tg-${var.environment}"
+  name_prefix = var.environment
+  port        = 80
+  protocol    = "HTTP"
   vpc_id      = var.vpc_id
   target_type = "ip"
 
@@ -26,7 +27,7 @@ resource "aws_alb_target_group" "main" {
 
   health_check {
     interval            = "30"
-    protocol            = "HTTPS"
+    protocol            = "HTTP"
     matcher             = "200"
     timeout             = "5"
     path                = var.health_check_path
