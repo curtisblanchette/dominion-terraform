@@ -10,6 +10,10 @@ variable "vpc_id" {
   description = "The VPC ID"
 }
 
+variable "availability_zones" {
+  description = "Availability Zones for this region"
+}
+
 variable "container_port" {
   description = "Ingres and egress port of the container"
 }
