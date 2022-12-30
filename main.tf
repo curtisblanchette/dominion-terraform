@@ -189,13 +189,15 @@ module "cloudfront" {
 }
 
 module "cognito" {
-  source      = "./cognito"
-  name        = var.name
-  account     = var.account
-  region      = var.region
-  app_url     = var.app_url
-  environment = var.environment
-  user_groups = var.user_groups
+  depends_on      = [module.secrets_manager]
+
+  source          = "./cognito"
+  name            = var.name
+  account         = var.account
+  region          = var.region
+  app_url         = var.app_url
+  environment     = var.environment
+  user_groups     = var.user_groups
   system_password = jsondecode(module.secrets_manager.secret_string)["credentials.system.password"]
 }
 
