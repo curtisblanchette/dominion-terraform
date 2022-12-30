@@ -58,6 +58,42 @@ resource "aws_security_group" "ecs_tasks" {
   }
 }
 
+###################################################
+# EC2 Bastion Host - Security Group
+###################################################
+resource "aws_security_group" "ec2_bastion_host" {
+  name        = "${var.name}-sg-bastion-host-${var.environment}"
+  vpc_id      = var.vpc_id
+
+  ingress {
+    description      = "Curts Home IP"
+    protocol         = "tcp"
+    from_port        = 0
+    to_port          = 65535
+    cidr_blocks      = ["${var.my_public_ip}/32"]
+  }
+
+  egress {
+    protocol    = "tcp"
+    from_port   = 5432
+    to_port     = 5432
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    protocol         = "tcp"
+    from_port        = 22
+    to_port          = 22
+    cidr_blocks      = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name        = "${var.name}-sg-bastion-host-${var.environment}"
+    Environment = var.environment
+  }
+}
+
+
 ##########################################################
 # RDS Aurora - Security Group
 ##########################################################
@@ -80,7 +116,7 @@ resource "aws_security_group" "rds" {
   }
 }
 
-resource "aws_security_group_rule" "dominion_rds_security_grouo_rule" {
+resource "aws_security_group_rule" "dominion_rds_sg_inbound_ecs" {
     type = "ingress"
     description = "Inbound From ECS"
     protocol = "TCP"
@@ -88,6 +124,16 @@ resource "aws_security_group_rule" "dominion_rds_security_grouo_rule" {
     to_port = 5432
     security_group_id = aws_security_group.rds.id
     source_security_group_id = aws_security_group.ecs_tasks.id
+}
+
+resource "aws_security_group_rule" "dominion_rds_sg_inbound_bastion" {
+  type = "ingress"
+  description = "Inbound From Bastion"
+  protocol = "TCP"
+  from_port = 5432
+  to_port = 5432
+  security_group_id = aws_security_group.rds.id
+  source_security_group_id = aws_security_group.ec2_bastion_host.id
 }
 
 output "alb" {
@@ -100,4 +146,8 @@ output "ecs_tasks" {
 
 output "rds" {
   value = aws_security_group.rds.id
+}
+
+output "bastion" {
+  value = aws_security_group.ec2_bastion_host.id
 }
