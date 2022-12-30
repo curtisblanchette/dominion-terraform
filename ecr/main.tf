@@ -31,3 +31,6 @@ resource "aws_ecr_lifecycle_policy" "main" {
 output "aws_ecr_repository_url" {
     value = length(aws_ecr_repository.main) > 0 ? aws_ecr_repository.main[*].repository_url : null
 }
+
+# TODO add ability to get latest docker container image from source (github build artifact maybe?)
+# https://stackoverflow.com/questions/68658353/push-docker-image-to-ecr-using-terraform
