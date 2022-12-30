@@ -7,7 +7,7 @@ variable "environment" {
 }
 
 variable "certificate_arn" {
-  description = "the arn of our 4iiz.io certificate"
+  description = "the arn of our SSL/TLS certificate"
 }
 
 variable "s3_bucket_dns_name" {

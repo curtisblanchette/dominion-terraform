@@ -4,7 +4,7 @@ resource "aws_cloudfront_distribution" "site" {
   comment             = "${var.name}-${var.environment}"
 
   aliases = [
-    "app2-${var.environment}.4iiz.io"
+    "app-${var.environment}.curtisblanchette.com"
   ]
 
   origin {
@@ -72,3 +72,4 @@ resource "aws_cloudfront_origin_access_identity" "origin_access_identity" {
 output "cloudfront_domain_name" {
   value = aws_cloudfront_distribution.site.domain_name
 }
+
