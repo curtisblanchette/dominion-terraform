@@ -20,6 +20,7 @@ variable "ecs_service_security_groups" {
 
 variable "container_port" {
   description = "Port of container"
+  default     = 80
 }
 
 variable "container_cpu" {
