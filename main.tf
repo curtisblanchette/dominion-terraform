@@ -1,3 +1,27 @@
+#terraform {
+#  backend "s3" {
+#    bucket  = "terraform-state"
+#    encrypt = true
+#    key     = "terraform.tfstate"
+#    region  = "us-west-2"
+#    # dynamodb_table = "terraform-state-lock-dynamo" - uncomment this line once the terraform-state-lock-dynamo has been terraformed
+#  }
+#}
+
+#resource "aws_dynamodb_table" "dynamodb_terraform_state_lock" {
+#  name           = "terraform-state-lock-dynamo"
+#  hash_key       = "LockID"
+#  read_capacity  = 20
+#  write_capacity = 20
+#  attribute {
+#    name = "LockID"
+#    type = "S"
+#  }
+#  tags = {
+#    Name = "DynamoDB Terraform State Lock Table"
+#  }
+#}
+
 provider "aws" {
   access_key = var.aws-access-key
   secret_key = var.aws-secret-key
@@ -35,29 +59,7 @@ data "external" "bastion_rsa_public_key" {
   program = ["bash", "-c", "jq --null-input --arg key \"$(ssh-keygen -y -f ~/.ssh/bastion_rsa.pem)\" '{\"key\": $key}'"]
 }
 
-#terraform {
-#  backend "s3" {
-#    bucket  = "terraform-state"
-#    encrypt = true
-#    key     = "terraform.tfstate"
-#    region  = "us-west-2"
-#    # dynamodb_table = "terraform-state-lock-dynamo" - uncomment this line once the terraform-state-lock-dynamo has been terraformed
-#  }
-#}
-#
-#resource "aws_dynamodb_table" "dynamodb_terraform_state_lock" {
-#  name           = "terraform-state-lock-dynamo"
-#  hash_key       = "LockID"
-#  read_capacity  = 20
-#  write_capacity = 20
-#  attribute {
-#    name = "LockID"
-#    type = "S"
-#  }
-#  tags = {
-#    Name = "DynamoDB Terraform State Lock Table"
-#  }
-#}
+
 
 module "secrets_manager" {
   source      = "./secrets_manager"

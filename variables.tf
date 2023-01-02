@@ -30,11 +30,6 @@ variable "aws-secret-key" {
   type = string
 }
 
-variable "hosted_zone_id" {
-  description = "the hosted zone id for dns records"
-  default     = ""
-}
-
 variable "availability_zones" {
   description = "a comma-separated list of availability zones, defaults to all AZ of the region, if set to something other than the defaults, both private_subnets and public_subnets have to be defined as well"
   default     = ["us-east-1a", "us-east-1b"]
@@ -60,11 +55,6 @@ variable "service_desired_count" {
   default     = 1
 }
 
-variable "container_image" {
-  description = "The name of the Docker image"
-  default     = ""
-}
-
 variable "container_port" {
   description = "The port where the Docker is exposed"
   default     = 80
@@ -85,15 +75,7 @@ variable "health_check_path" {
   default     = "/api/v1/healthcheck"
 }
 
-variable "certificate_arn" {
-  description = "The ARN of the certificate that the ALB uses for https"
-}
-
 variable "user_groups" {
   description = "the cognito user pool groups"
   default     = ["system", "admin", "owner", "consultant", "agent"]
-}
-
-variable "secrets_manager_arn" {
-  description = "The ARN for the secrets manager secret"
 }
