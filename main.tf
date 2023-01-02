@@ -5,14 +5,14 @@ provider "aws" {
 }
 
 provider "aws" {
-  alias = "virginia" # secondary provider must be aliased to support multi-region resources
+  alias      = "virginia" # secondary provider must be aliased to support multi-region resources
   access_key = var.aws-access-key
   secret_key = var.aws-secret-key
-  region = "us-east-1"
+  region     = "us-east-1"
 }
 
 data "aws_acm_certificate" "main" {
-  domain = "*.curtisblanchette.com"
+  domain   = "*.curtisblanchette.com"
   statuses = ["ISSUED"]
 }
 
@@ -20,7 +20,7 @@ data "aws_acm_certificate" "main" {
 # a certificate resource can be imported from AWS in any region
 # we use the us-east-1 provider to perform any dependant requests
 data "aws_acm_certificate" "cloudfront" {
-  domain = "*.curtisblanchette.com"
+  domain   = "*.curtisblanchette.com"
   statuses = ["ISSUED"]
   provider = aws.virginia
 }
@@ -92,20 +92,20 @@ module "security_groups" {
 }
 
 module "rds" {
-  depends_on        = [module.secrets_manager]
-  source            = "./rds"
-  name              = var.name
-  vpc_id            = module.vpc.id
-  environment       = var.environment
-  container_port    = var.container_port
-  db_security_group = module.security_groups.rds
+  depends_on         = [module.secrets_manager]
+  source             = "./rds"
+  name               = var.name
+  vpc_id             = module.vpc.id
+  environment        = var.environment
+  container_port     = var.container_port
+  db_security_group  = module.security_groups.rds
   availability_zones = var.availability_zones
-  db_subnet_group   = module.vpc.db_subnet_group
-  master_password   = jsondecode(module.secrets_manager.secret_string)["services.postgres.password"]
+  db_subnet_group    = module.vpc.db_subnet_group
+  master_password    = jsondecode(module.secrets_manager.secret_string)["services.postgres.password"]
 }
 
 module "alb" {
-  depends_on = [data.aws_acm_certificate.main]
+  depends_on          = [data.aws_acm_certificate.main]
   source              = "./alb"
   name                = var.name
   vpc_id              = module.vpc.id
@@ -137,7 +137,7 @@ module "ecs" {
   container_cpu               = var.container_cpu
   container_memory            = var.container_memory
   service_desired_count       = var.service_desired_count
-  container_environment       = [
+  container_environment = [
     {
       name  = "NODE_ENV",
       value = var.environment
@@ -163,12 +163,12 @@ module "ecs" {
 #}
 
 module "route53" {
-  source                 = "./route53"
-  name                   = var.name
-  environment            = var.environment
-  aws_alb_dns_name       = module.alb.aws_alb_dns_name
-  aws_alb_zone_id        = module.alb.aws_alb_zone_id
-#  deployment_invoke_url  = module.apigw.invoke_url
+  source           = "./route53"
+  name             = var.name
+  environment      = var.environment
+  aws_alb_dns_name = module.alb.aws_alb_dns_name
+  aws_alb_zone_id  = module.alb.aws_alb_zone_id
+  #  deployment_invoke_url  = module.apigw.invoke_url
   cloudfront_domain_name = module.cloudfront.cloudfront_domain_name
 }
 
@@ -189,7 +189,7 @@ module "cloudfront" {
 }
 
 module "cognito" {
-  depends_on      = [module.secrets_manager]
+  depends_on = [module.secrets_manager]
 
   source          = "./cognito"
   name            = var.name
@@ -202,16 +202,16 @@ module "cognito" {
 }
 
 module "ec2" {
-  source        = "./ec2"
-  vpc_id        = module.vpc.id
-  name          = var.name
-  cidr          = var.cidr
-  subnets       = module.vpc.public_subnets
-  region        = var.region
-  environment   = var.environment
-  my_public_ip  = data.external.myipaddr.result.ip
-  public_key    = data.external.bastion_rsa_public_key.result.key
-  bastion_sg_id = module.security_groups.bastion
+  source           = "./ec2"
+  vpc_id           = module.vpc.id
+  name             = var.name
+  cidr             = var.cidr
+  subnets          = module.vpc.public_subnets
+  region           = var.region
+  environment      = var.environment
+  my_public_ip     = data.external.myipaddr.result.ip
+  public_key       = data.external.bastion_rsa_public_key.result.key
+  bastion_sg_id    = module.security_groups.bastion
   internet_gateway = module.vpc.internet_gateway
 }
 

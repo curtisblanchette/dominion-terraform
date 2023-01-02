@@ -19,7 +19,7 @@ variable "region" {
 
 variable "app_url" {
   description = "the dominion-ui url for this environment"
-  default = "https://app-dev.curtisblanchette.com"
+  default     = "https://app-dev.curtisblanchette.com"
 }
 
 variable "aws-access-key" {
@@ -32,7 +32,7 @@ variable "aws-secret-key" {
 
 variable "hosted_zone_id" {
   description = "the hosted zone id for dns records"
-  default = ""
+  default     = ""
 }
 
 variable "availability_zones" {
