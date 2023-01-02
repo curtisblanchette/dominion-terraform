@@ -43,3 +43,28 @@ data "aws_iam_policy_document" "allow_access_from_internet" {
     ]
   }
 }
+
+
+resource "aws_s3_bucket" "dominion_config" {
+  bucket        = "${var.name}-config"
+  force_destroy = true
+
+  tags = {
+    Name        = var.name
+    Environment = var.environment
+  }
+}
+
+# Important Factoid:
+# when re-creating a bucket with a previously used name -- for example: you just deleted it
+# the (globally unique) name availability may take up to 1 hour to be released
+resource "aws_s3_object" "dominion_config_dev" {
+  bucket = aws_s3_bucket.dominion_config.id
+  key    = "${var.environment}.yml"
+  source = file("/Users/curtisblanchette/code/s3.dominion-config/${var.environment}.yml")
+
+  # (Optional) Triggers updates when the value changes.
+  # The only meaningful value is filemd5("path/to/file") (Terraform 0.11.12 or later) or ${md5(file("path/to/file"))} (Terraform 0.11.11 or earlier).
+  # This attribute is not compatible with KMS encryption, kms_key_id or server_side_encryption = "aws:kms" (see source_hash instead).
+  # etag   = filemd5("/Users/curtisblanchette/code/s3.dominion-config/${var.environment}.yml")
+}
