@@ -20,12 +20,24 @@ This setup creates the following resources:
 - An ECR for the docker images
 - An ECS cluster with a service (incl. auto scaling policies for CPU and memory usage)
   and task definition to run docker containers from the ECR (incl. IAM execution role)
+- An RDS Aurora PostgreSQL Serverless v2
+- An EC2 Linux Bastion Jump Host for private access to Aurora
+- An S3 Bucket Website Host
+- A Cloudfront Distribution
+- A Cognito User Pool with 1 initial System User
+
 
 ![example](./image.png "Infrastructure illustration")
 
 ### Install Terraform
 
 - Install terraform on MacOS with `brew install terraform`
+- Install TFLint `brew install tflint`
+
+### Initialize Project
+- Initialize Terraform `terraform init` 
+- Initialize TFLint `tflint --init`
+
 
 ### Planning and Applying Changes 
 1. update `dev.tfvars` file to manage secret values for different environments or projects with the same infrastructure
@@ -54,7 +66,7 @@ Here is a guideline:
 
 1. Setup AWS CLI on MacOS with `brew install aws-cli`
    1. Get access key and secret from IAM for your user
-   1. execute `aws configure` .. enter your key and secret
+   1. execute `aws configure` ... enter your key and secret
    1. find your credentials stored in files within `~/.aws` folder
 1. Create s3 bucket to hold our terraform state with this command: `aws s3api create-bucket --bucket my-terraform-backend-store --region eu-central-1 --create-bucket-configuration LocationConstraint=eu-central-1`
 1. Because the terraform state contains some very secret secrets, setup encryption of bucket: `aws s3api put-bucket-encryption --bucket my-terraform-backend-store --server-side-encryption-configuration "{\"Rules\":[{\"ApplyServerSideEncryptionByDefault\":{\"SSEAlgorithm\":\"AES256\"}}]}"`
