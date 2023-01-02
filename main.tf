@@ -25,13 +25,6 @@ data "aws_acm_certificate" "cloudfront" {
   provider = aws.virginia
 }
 
-#data "aws_secretsmanager_secret" "secrets" {
-#  arn = var.secrets_manager_arn
-#}
-#data "aws_secretsmanager_secret_version" "current" {
-#  secret_id = data.aws_secretsmanager_secret.secrets.id
-#}
-
 # Learn our public IP Address
 data "external" "myipaddr" {
   program = ["bash", "-c", "curl -s 'https://api.ipify.org?format=json'"]
@@ -42,29 +35,29 @@ data "external" "bastion_rsa_public_key" {
   program = ["bash", "-c", "jq --null-input --arg key \"$(ssh-keygen -y -f ~/.ssh/bastion_rsa.pem)\" '{\"key\": $key}'"]
 }
 
-#terraform {
-#  backend "s3" {
-#    bucket  = "terraform-backend-store"
-#    encrypt = true
-#    key     = "terraform.tfstate"
-#    region  = "us-west-2"
-#    # dynamodb_table = "terraform-state-lock-dynamo" - uncomment this line once the terraform-state-lock-dynamo has been terraformed
-#  }
-#}
+terraform {
+  backend "s3" {
+    bucket  = "terraform-state"
+    encrypt = true
+    key     = "terraform.tfstate"
+    region  = "us-west-2"
+    # dynamodb_table = "terraform-state-lock-dynamo" - uncomment this line once the terraform-state-lock-dynamo has been terraformed
+  }
+}
 
-#resource "aws_dynamodb_table" "dynamodb-terraform-state-lock" {
-#  name           = "terraform-state-lock-dynamo"
-#  hash_key       = "LockID"
-#  read_capacity  = 20
-#  write_capacity = 20
-#  attribute {
-#    name = "LockID"
-#    type = "S"
-#  }
-#  tags = {
-#    Name = "DynamoDB Terraform State Lock Table"
-#  }
-#}
+resource "aws_dynamodb_table" "dynamodb_terraform_state_lock" {
+  name           = "terraform-state-lock-dynamo"
+  hash_key       = "LockID"
+  read_capacity  = 20
+  write_capacity = 20
+  attribute {
+    name = "LockID"
+    type = "S"
+  }
+  tags = {
+    Name = "DynamoDB Terraform State Lock Table"
+  }
+}
 
 module "secrets_manager" {
   source      = "./secrets_manager"
